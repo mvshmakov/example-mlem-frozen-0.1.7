@@ -42,12 +42,12 @@ stages:
     params:
       params.yaml:
         train.min_split: 2
-        train.n_est: 50
+        train.n_est: 1
         train.seed: 20170428
     outs:
     - path: models/iris-classifier/artifacts
-      md5: fb9447fe80b9d114d7d5893deff68df6.dir
-      size: 81807
+      md5: aa5aad9514bd570c66bd30c966f8b2dc.dir
+      size: 3711
       nfiles: 1
     - path: models/iris-classifier/mlem.yaml
       md5: 138194b7e74fa4ed417ac98da541e691
@@ -60,13 +60,13 @@ stages:
       size: 1247
       nfiles: 3
     - path: models/iris-classifier
-      md5: 940e9acdfbf482e9d2b720ed9ec59673.dir
-      size: 84156
+      md5: a70ae65942476a740943b158bca8782e.dir
+      size: 6060
       nfiles: 3
     outs:
     - path: .mlem/dataset/data/pred/artifacts
-      md5: 6ae3a282c962c56d837eb75afee40bb3.dir
-      size: 354
+      md5: fdcf08244b822b32f10eaaf08c4ef4cb.dir
+      size: 248
       nfiles: 1
     - path: .mlem/dataset/data/pred/mlem.yaml
       md5: 41353b3f6f3b802ab60f315600c7a397
@@ -75,8 +75,8 @@ stages:
     cmd: python src/score.py .mlem/dataset/data/pred data/test_y scores.json
     deps:
     - path: .mlem/dataset/data/pred
-      md5: 7f095200c38d376daef55752556ad4c2.dir
-      size: 608
+      md5: f7dc717879a69fc840e2905a896c46fb.dir
+      size: 502
       nfiles: 3
     - path: data/test_y
       md5: 4a28a881c80e0d171fcf099c315bf6d6.dir
@@ -87,5 +87,5 @@ stages:
       size: 666
     outs:
     - path: scores.json
-      md5: bd0299979bffde632d97a70887c050d6
-      size: 22
+      md5: cc01ea8a38b7bb36862cc3de4fa96818
+      size: 37
