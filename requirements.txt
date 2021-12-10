@@ -1,0 +1,6 @@
+pandas
+pyaml
+scikit-learn
+scipy
+dvc[azure] >= 2.6.0
+mlem[dvc,fastapi] >= 0.1.3
