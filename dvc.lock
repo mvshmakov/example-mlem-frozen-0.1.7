@@ -1,0 +1,91 @@
+schema: '2.0'
+stages:
+  generate:
+    cmd: python src/generate_data.py
+    deps:
+    - path: src/generate_data.py
+      md5: 9600142a5c01cfca16c372bbf1026498
+      size: 548
+    outs:
+    - path: data/test_x/artifacts
+      md5: 45ad5a27e9d3869460e7fe38b6b847f1.dir
+      size: 804
+      nfiles: 1
+    - path: data/test_x/mlem.yaml
+      md5: 3242463f89e714495b43e67a6a14c0e5
+      size: 432
+    - path: data/test_y/artifacts
+      md5: 04a1c6122f248c99cdbbf3949d5c189e.dir
+      size: 209
+      nfiles: 1
+    - path: data/test_y/mlem.yaml
+      md5: d3ebcd3d47db581ee1b8fa8909474739
+      size: 307
+    - path: data/train/artifacts
+      md5: dcfc49b9bd0ca43366c2ee1758b3c2af.dir
+      size: 2459
+      nfiles: 1
+    - path: data/train/mlem.yaml
+      md5: 8e3750f81edbb59ec9566b9eb94124b0
+      size: 457
+  train:
+    cmd: python src/train.py data/train models/iris-classifier && mlem link models/iris-classifier
+      latest
+    deps:
+    - path: data/train
+      md5: 10f5eefe06021b4cd5f66466333c7cb6.dir
+      size: 2927
+      nfiles: 3
+    - path: src/train.py
+      md5: ee619ff955a9c80df2a449eec4390137
+      size: 1059
+    params:
+      params.yaml:
+        train.min_split: 2
+        train.n_est: 50
+        train.seed: 20170428
+    outs:
+    - path: models/iris-classifier/artifacts
+      md5: fb9447fe80b9d114d7d5893deff68df6.dir
+      size: 81807
+      nfiles: 1
+    - path: models/iris-classifier/mlem.yaml
+      md5: 138194b7e74fa4ed417ac98da541e691
+      size: 2338
+  predict:
+    cmd: mlem apply latest data/test_x -m predict_proba -o data/pred
+    deps:
+    - path: data/test_x
+      md5: 952ee0daa9e41120b55f9293360994f7.dir
+      size: 1247
+      nfiles: 3
+    - path: models/iris-classifier
+      md5: 940e9acdfbf482e9d2b720ed9ec59673.dir
+      size: 84156
+      nfiles: 3
+    outs:
+    - path: .mlem/dataset/data/pred/artifacts
+      md5: 6ae3a282c962c56d837eb75afee40bb3.dir
+      size: 354
+      nfiles: 1
+    - path: .mlem/dataset/data/pred/mlem.yaml
+      md5: 41353b3f6f3b802ab60f315600c7a397
+      size: 243
+  score:
+    cmd: python src/score.py .mlem/dataset/data/pred data/test_y scores.json
+    deps:
+    - path: .mlem/dataset/data/pred
+      md5: 7f095200c38d376daef55752556ad4c2.dir
+      size: 608
+      nfiles: 3
+    - path: data/test_y
+      md5: 4a28a881c80e0d171fcf099c315bf6d6.dir
+      size: 527
+      nfiles: 3
+    - path: src/score.py
+      md5: c15f2cbcb74ab4de4fc8bfffaf65c7bd
+      size: 666
+    outs:
+    - path: scores.json
+      md5: bd0299979bffde632d97a70887c050d6
+      size: 22
