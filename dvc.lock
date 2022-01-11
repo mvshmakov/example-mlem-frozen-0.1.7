@@ -1,0 +1,107 @@
+schema: '2.0'
+stages:
+  generate:
+    cmd: python src/generate_data.py
+    deps:
+    - path: src/generate_data.py
+      md5: 9600142a5c01cfca16c372bbf1026498
+      size: 548
+    outs:
+    - path: data/test_x/artifacts
+      md5: 45ad5a27e9d3869460e7fe38b6b847f1.dir
+      size: 804
+      nfiles: 1
+    - path: data/test_x/mlem.yaml
+      md5: 2888e81996116b071108f495ac75aae8
+      size: 485
+    - path: data/test_y/artifacts
+      md5: 04a1c6122f248c99cdbbf3949d5c189e.dir
+      size: 209
+      nfiles: 1
+    - path: data/test_y/mlem.yaml
+      md5: 078acdd4616489ff89a4500c59161eb9
+      size: 360
+    - path: data/train/artifacts
+      md5: dcfc49b9bd0ca43366c2ee1758b3c2af.dir
+      size: 2459
+      nfiles: 1
+    - path: data/train/mlem.yaml
+      md5: 9447b2e961688c6d35986df9c1f296dc
+      size: 511
+  train:
+    cmd: python src/train.py data/train models/rf models/logreg
+    deps:
+    - path: data/train
+      md5: 4754248c49798060b17f1d6245eb9f1e.dir
+      size: 2981
+      nfiles: 3
+    - path: src/train.py
+      md5: 1fc2efe8ad7700864cacf1d0c26db35c
+      size: 1335
+    params:
+      params.yaml:
+        train.min_split: 2
+        train.n_est: 50
+        train.seed: 20170428
+    outs:
+    - path: models/logreg/artifacts
+      md5: e94c717c6893583a597ba883f519e0f9.dir
+      size: 1167
+      nfiles: 1
+    - path: models/logreg/mlem.yaml
+      md5: 872a7d76b2bc13fb749452fb20181bcb
+      size: 2433
+    - path: models/rf/artifacts
+      md5: ac41a4dac6d1ebb3cbacf5b5cc126f1c.dir
+      size: 88013
+      nfiles: 1
+    - path: models/rf/mlem.yaml
+      md5: 5332351ef504b5ab413f987e301d15eb
+      size: 2428
+  link:
+    cmd: mlem link models/rf latest
+    deps:
+    - path: models/rf
+      md5: b7ef89d62dd2b2d86513274f7a4cc541.dir
+      size: 90452
+      nfiles: 3
+    outs:
+    - path: .mlem/link/latest.mlem.yaml
+      md5: 286d6abb46738568d79c588ac799625f
+      size: 61
+  predict:
+    cmd: mlem apply latest data/test_x -m predict_proba -o data/pred
+    deps:
+    - path: .mlem/link/latest.mlem.yaml
+      md5: 286d6abb46738568d79c588ac799625f
+      size: 61
+    - path: data/test_x
+      md5: d4450723ceaa9087250d254160339c05.dir
+      size: 1300
+      nfiles: 3
+    outs:
+    - path: .mlem/dataset/data/pred/artifacts
+      md5: 6ae3a282c962c56d837eb75afee40bb3.dir
+      size: 354
+      nfiles: 1
+    - path: .mlem/dataset/data/pred/mlem.yaml
+      md5: 10fb8e38ed1570552e8cb62ec36964a7
+      size: 296
+  score:
+    cmd: python src/score.py .mlem/dataset/data/pred data/test_y scores.json
+    deps:
+    - path: .mlem/dataset/data/pred
+      md5: 1e6712b7960120f2b69cc0edd844cbd5.dir
+      size: 661
+      nfiles: 3
+    - path: data/test_y
+      md5: 6758bdbc3924ef854366ca515d34c015.dir
+      size: 580
+      nfiles: 3
+    - path: src/score.py
+      md5: c15f2cbcb74ab4de4fc8bfffaf65c7bd
+      size: 666
+    outs:
+    - path: scores.json
+      md5: bd0299979bffde632d97a70887c050d6
+      size: 22
