@@ -7,6 +7,6 @@ featurize:
   ngrams: 1
 
 train:
-  seed: 20170428
+  seed: 20170420
   n_est: 5
   min_split: 1
